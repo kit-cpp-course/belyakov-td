@@ -4,5 +4,3 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-
-using namespace std;

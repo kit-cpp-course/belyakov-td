@@ -1,34 +1,62 @@
-#include "HandlingDataFromFile.h"
 #include "stdafx.h"
+#include "HandlingDataFromFile.h"
+
+using namespace std;
+
+//Converting from string to double (return false if unsuccessful)
+bool HandlingDataFromFile::String2Double(string strValue) {
+	int length = strValue.size();
+	int temp;
+	for (int i = 0; i < length; i++) {
+		if (strValue[i] == '.') {
+			continue;
+		}
+		if (int(strValue[i]) < 48 || int(strValue[i]) > 57) {
+			return false;
+		}
+	}
+	return true;
+}
 
 //Get numbers from the line and put their in array
-void HandlingDataFromFile::MakeArray(string line, double* arr, int size) {
+bool HandlingDataFromFile::MakeArray(string line, double* arr, int size) {
 	int length = line.size(),
-		i = 0,
-		index = 0;
+		arrIndex = 0,
+		lineIndex = 0;
 	string strValue = "";
 	double dblValue;
 
 	line += ' ';
-	for (int i = 0; i <= length; i++) {
+	while (line[lineIndex] == ' ') {
+		lineIndex++;
+	}
+	for (int i = lineIndex; i <= length; i++) {
 		if (line[i] != ' ') {
 			strValue += line[i];
 		}
-		else {
-			dblValue = atof(strValue.c_str());
-			arr[index] = dblValue;
-			index++;
+		else if (String2Double(strValue)) {
+			dblValue = stod(strValue);
+			arr[arrIndex] = dblValue;
+			arrIndex++;
 			strValue = "";
 		}
+		else {
+			return false;
+		}
 	}
+	return true;
 }
 
 //Count numbers in the line
 int HandlingDataFromFile::CountElements(string line) {
 	int length = line.size(),
-		count = 1;
+		count = 1,
+		lineIndex = 0;
 
-	for (int i = 0; i < length; i++) {
+	while (line[lineIndex] == ' ') {
+		lineIndex++;
+	}
+	for (int i = lineIndex; i < length; i++) {
 		if (line[i] == ' ') {
 			count++;
 		}

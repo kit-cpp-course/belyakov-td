@@ -1,16 +1,27 @@
 #pragma once
-#include "stdafx.h"
 #include "ValueAndRank.h"
+#include "CorrelCoeff.h"
 
-class SpearmanCoeff {
+class SpearmanCoeff : public CorrelCoeff {
 private:
-	static void CopyArray(double*, double*, int);
-	static void SelectSort(double*, int);
-	static int FindMinIndex(double*, int, int);
-	static int CountUniqueElements(double*, int);
-	static void InitialArrayByValues(ValueAndRank*, double*, int);
-	static void InitialArrayByRanks(ValueAndRank*, double*, int, int);
-	static double FindRankByValue(ValueAndRank*, double, int);
+	//Make a copy of primary array
+	void CopyArray(double*, double*, int);
+	//Count unique elements in the array
+	int CountUniqueElements(double*, int);
+	//Initial ValueAndRank* array by values
+	void InitialArrayByValues(ValueAndRank*, double*, int);
+	//Initial ValueAndRank* array by ranks
+	void InitialArrayByRanks(ValueAndRank*, double*, int, int);
+	//Get rank by value in the ValueAndRank* array
+	double FindRankByValue(ValueAndRank*, double, int);
+protected:
+	//Make a select sort of the array 
+	void SelectSort(double*, int);
+	//Find the index of minimal element in the array
+	int FindMinIndex(double*, int, int);
 public:
-	static double CalculateCoeff(double*, double*, int);	
+	//Constructor
+	SpearmanCoeff(double* X, double*Y, int size) : CorrelCoeff(X, Y, size, "Spearman's Coefficient") {}
+	//Calculate the coefficient of correlation
+	double CalculateCoeff() override;
 };

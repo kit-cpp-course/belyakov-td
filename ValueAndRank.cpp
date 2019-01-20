@@ -1,5 +1,5 @@
-#include "ValueAndRank.h"
 #include "stdafx.h"
+#include "ValueAndRank.h"
 
 ValueAndRank::ValueAndRank() {}
 

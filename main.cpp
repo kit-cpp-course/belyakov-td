@@ -1,45 +1,70 @@
-﻿#pragma once
 #include "stdafx.h"
 #include "SpearmanCoeff.h"
+#include "CorrelCoeff.h"
 #include "HandlingDataFromFile.h"
 
-int main(size_t count, char** arg) {
+using namespace std;
 
-	ifstream file(arg[0]);
+int main(size_t count, char* arg[]) {
+	string inFile = "", outFile = "";
 
-	if (file.is_open()) {
-		string line1, line2; //two lines of our values
+	if (count == 5) {
+		for (int i = 1; i < count; i++) {
+			if (!strcmp(arg[i], "/in")) {
+				inFile = arg[i + 1];
+			}
+			if (!strcmp(arg[i], "/out")) {
+				outFile = arg[i + 1];
+			}
+		}
+	}
+	else
+	{
+		cout << "Enter data!" << count << endl;
+		return 0;
+	}
 
-		getline(file, line1);
-		getline(file, line2);
+	ifstream inputFile(inFile);
 
-		file.close();
+	if (inputFile.is_open()) {
+		string lineX, lineY; //two lines of our values
 
-		int size1 = HandlingDataFromFile::CountElements(line1), //knowing the size of future arrays
-			size2 = HandlingDataFromFile::CountElements(line2);
+		getline(inputFile, lineX);
+		getline(inputFile, lineY);
+
+		inputFile.close();
+
+		int sizeX = HandlingDataFromFile::CountElements(lineX), //knowing the size of future arrays
+			sizeY = HandlingDataFromFile::CountElements(lineY);
 
 		//Checking correctness of the number of the values
-		if (size1 <= 2 || size2 <= 2) {
+		if (sizeX <= 2 || sizeY <= 2) {
 			cout << "Number of values must be more than 2!" << endl;
 			return 0;
 		}
 
-		if (size1 == size2) {
-			double* array1 = new double[size1]; //two working arrays of data
-			double* array2 = new double[size1];
+		if (sizeX == sizeY) {
+			double* arrayX = new double[sizeX]; //two working arrays of data
+			double* arrayY = new double[sizeY];
 
-			HandlingDataFromFile::MakeArray(line1, array1, size1); //fill arrays by data from the file
-			HandlingDataFromFile::MakeArray(line2, array2, size1);
+			//If it's possible, fill arrays by data from the file
+			if (!HandlingDataFromFile::MakeArray(lineX, arrayX, sizeX) || !HandlingDataFromFile::MakeArray(lineY, arrayY, sizeY)) {
+				cout << "Uncorrect data!" << endl;
+				delete[] arrayX;
+				delete[] arrayY;
+				return 0;
+			};
 
 			//Calculate coefficient
-			double rank;
-			rank = SpearmanCoeff::CalculateCoeff(array1, array2, size1);
-			cout << "Spearman's rank correlation coefficient: ";
-			cout.precision(3);
-			cout << rank << endl;
+			ofstream outputFile(outFile, ios::app);
+			SpearmanCoeff SpCorr(arrayX, arrayY, sizeX);
+			double coeff = SpCorr.CalculateCoeff();
+			outputFile << "Spearman's rank correlation coefficient: ";
+			outputFile << coeff << endl;
+			cout << "The calculation was successful" << endl;
 
-			delete[] array1;
-			delete[] array2;
+			delete[] arrayX;
+			delete[] arrayY;
 		}
 		else {
 			cout << "Number of values doesn't match!" << endl;
@@ -49,6 +74,5 @@ int main(size_t count, char** arg) {
 		cout << "File not found!" << endl;
 	}
 
-	system("pause");
 	return 0;
 }
