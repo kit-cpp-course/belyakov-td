@@ -26,4 +26,5 @@ public:
 	}
 	//Method that calculate coefficient
 	virtual double CalculateCoeff() = 0;
+	virtual std::string getName() { return Name; }
 };

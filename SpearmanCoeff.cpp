@@ -142,3 +142,6 @@ double SpearmanCoeff::FindRankByValue(ValueAndRank* arr, double value, int size)
 	}
 	return arr[i].getRank();
 }
+
+//Constructor
+SpearmanCoeff::SpearmanCoeff(double* X, double* Y, int size) : CorrelCoeff(X, Y, size, "Spearman's coefficient") {}

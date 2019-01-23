@@ -57,12 +57,11 @@ int main(size_t count, char* arg[]) {
 
 			//Calculate coefficient
 			ofstream outputFile(outFile, ios::app);
-			SpearmanCoeff SpCorr(arrayX, arrayY, sizeX);
-			double coeff = SpCorr.CalculateCoeff();
-			outputFile << "Spearman's rank correlation coefficient: ";
-			outputFile << coeff << endl;
+			CorrelCoeff * CrCoeff = new SpearmanCoeff(arrayX, arrayY, sizeX);
+			outputFile << CrCoeff->getName() << ": " << CrCoeff->CalculateCoeff() << endl;
 			cout << "The calculation was successful" << endl;
 
+			delete CrCoeff;
 			delete[] arrayX;
 			delete[] arrayY;
 		}
